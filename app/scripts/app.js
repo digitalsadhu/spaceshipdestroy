@@ -6,7 +6,7 @@ define([/* Dependencies here eg. /box2d/collision/ClipVertex.js */], function(/*
   	var x = 188;
     var y = 130;
     var width = 200;
-    var height = 137;
+    var height = 200;
     var imageObj = new Image();
 
     imageObj.onload = function() {
@@ -15,14 +15,19 @@ define([/* Dependencies here eg. /box2d/collision/ClipVertex.js */], function(/*
     imageObj.src = "http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg";
   	
     function move() {
-  		imageObj.x = x+10;
+  		x = x+10;
+  		if (x>400) {
+  			x=-200;
+  		}
+  		context.clearRect(0, 0, canvas.width, canvas.height);
+  		context.drawImage(imageObj, x, y, width, height);
   	}
 
   	var gameLoop = function() {
   		move();
   		window.setTimeout(function(){
   			gameLoop();
-  		},1000);
+  		},100);
   	};
 
   	
