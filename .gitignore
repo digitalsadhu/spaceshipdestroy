@@ -2,6 +2,4 @@ temp
 dist
 .DS_Store
 npm-debug.log
-nbproject/
 .jshintrc
-.editorconfig
