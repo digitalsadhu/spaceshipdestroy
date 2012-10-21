@@ -28,7 +28,12 @@ define([],function(){
   		if(keyboard.getKey(40) === true){
   			player.setPosition(player.getX(), player.getY()+mvSpeed);
   		}
-  		
+                if(keyboard.getKey(32) === true) {
+                        mvSpeed = 3;
+                } else {
+                    mvSpeed = 1;
+                }
+            
   		window.setTimeout(step,stepSpeed);
   	};
 
