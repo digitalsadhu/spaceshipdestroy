@@ -7,23 +7,17 @@ define([], function() {
         'height': 32,
         'width': 32,
         'moveSpeed': 1,
-        'swivelIncrements': 126
-
+        'swivelIncrements': 120
     };
 
-    var image, context, positionX, positionY, angle, currentRotation;
+    var image, context, positionX, positionY, angle, rotation;
 
-    function setPosition(x, y, rotation) {
-
-        //store position and rotation
-        positionX = x;
-        positionY = y;
-
+    function setPosition() {
         //save the context so we can do a transform
         context.save();
         //create the transformation
         //context.translate(100, 100);
-        context.translate(x + (player.width / 2), y + (player.width / 2));
+        context.translate(positionX + (player.width / 2), positionY + (player.width / 2));
         context.rotate(angle * rotation);
         //setPosition(-16, -16);
         context.drawImage(image, -(player.width / 2), -(player.width / 2));
@@ -52,75 +46,47 @@ define([], function() {
     }
 
     function update(keyboard) {
-
         if (keyboard.getKey(37) === true) {
             swivelLeft();
         }
-
         if (keyboard.getKey(39) === true) {
             swivelRight();
         }
-
         if (keyboard.getKey(38) === true) {
             moveForward();
         }
-
         if (keyboard.getKey(40) === true) {
             moveBackward();
         }
-
         if (keyboard.getKey(32) === true) {
             player.mvSpeed = 3;
         } else {
-            player.mvSpeed = 1;
+            player.mvSpeed = 1.5;
         }
-        
-        setPosition(getX(), getY(), currentRotation);
-    }
-
-    function moveLeft() {
-        setPosition(getX() - player.mvSpeed, getY(), currentRotation);
-    }
-
-    function moveRight() {
-        setPosition(getX() + player.mvSpeed, getY(), currentRotation);
-    }
-
-    function moveUp() {
-        setPosition(getX(), getY() - player.mvSpeed, currentRotation);
-    }
-
-    function moveDown() {
-        setPosition(getX(), getY() + player.mvSpeed, currentRotation);
+        setPosition();
     }
 
     function swivelLeft() {
-        currentRotation--;
-        currentRotation = currentRotation % player.swivelIncrements;
-        setPosition(getX(), getY(), currentRotation);
+        rotation = --rotation % player.swivelIncrements;
     }
 
     function swivelRight() {
-        currentRotation++;
-        currentRotation = currentRotation % player.swivelIncrements;
-        setPosition(getX(), getY(), currentRotation);
+        rotation = ++rotation % player.swivelIncrements;
     }
 
     function moveForward() {
-        setPosition(positionX - Math.sin(angle * currentRotation) * player.mvSpeed,
-                positionY + Math.cos(angle * currentRotation) * player.mvSpeed,
-                currentRotation);
+        positionX -= Math.sin(angle * rotation) * player.mvSpeed;
+        positionY += Math.cos(angle * rotation) * player.mvSpeed;
     }
 
     function moveBackward() {
-        setPosition(positionX + Math.sin(angle * currentRotation) * 0.5,
-                positionY - Math.cos(angle * currentRotation) * 0.5,
-                currentRotation);
+        positionX += Math.sin(angle * rotation) * 0.5;
+        positionY -= Math.cos(angle * rotation) * 0.5;
     }
 
     function init(startPosition, ctx) {
         context = ctx;
-        currentRotation = 0;
+        rotation = 0;
         //360 degrees broken into 32 bits in radians
         angle = 2 * Math.PI / player.swivelIncrements;
         image = new Image();
@@ -128,7 +94,8 @@ define([], function() {
         image.width = player.width;
         image.height = player.height;
         image.onload = function() {
-            setPosition(startPosition.x, startPosition.y);
+            positionX = startPosition.x;
+            positionY = startPosition.y;
         };
     }
 
