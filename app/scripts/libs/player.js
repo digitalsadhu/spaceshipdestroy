@@ -59,7 +59,7 @@ define([], function() {
             moveBackward();
         }
         if (keyboard.getKey(32) === true) {
-            player.mvSpeed = 3;
+            player.mvSpeed = 8;
         } else {
             player.mvSpeed = 1.5;
         }
@@ -77,11 +77,27 @@ define([], function() {
     function moveForward() {
         positionX -= Math.sin(angle * rotation) * player.mvSpeed;
         positionY += Math.cos(angle * rotation) * player.mvSpeed;
+        handleEdge();
     }
 
     function moveBackward() {
         positionX += Math.sin(angle * rotation) * 0.5;
         positionY -= Math.cos(angle * rotation) * 0.5;
+        handleEdge();
+    }
+
+    function handleEdge()
+    {
+        if (positionX < -32) {
+            positionX = 1200;
+        } else if (positionX > 1200) {
+            positionX = -32;
+        }
+        if (positionY < -32) {
+            positionY = 700;
+        } else if (positionY > 700) {
+            positionY = -32;
+        }
     }
 
     function init(startPosition, ctx) {
