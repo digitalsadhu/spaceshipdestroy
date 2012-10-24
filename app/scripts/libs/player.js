@@ -2,7 +2,7 @@ define([], function() {
 
     var player = {
         'radius': 10,
-        'image': 'images/spaceship1.jpg',
+        'image': 'images/spaceship1.png',
         'initialRotation': 0,
         'height': 32,
         'width': 32,
@@ -75,14 +75,14 @@ define([], function() {
     }
 
     function moveForward() {
-        positionX -= Math.sin(angle * rotation) * player.mvSpeed;
-        positionY += Math.cos(angle * rotation) * player.mvSpeed;
+        positionX += Math.sin(angle * rotation) * player.mvSpeed;
+        positionY -= Math.cos(angle * rotation) * player.mvSpeed;
         handleEdge();
     }
 
     function moveBackward() {
-        positionX += Math.sin(angle * rotation) * 0.5;
-        positionY -= Math.cos(angle * rotation) * 0.5;
+        positionX -= Math.sin(angle * rotation) * 0.5;
+        positionY += Math.cos(angle * rotation) * 0.5;
         handleEdge();
     }
 
