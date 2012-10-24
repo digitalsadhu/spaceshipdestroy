@@ -1,1 +1,13 @@
-canvas#game { border:1px grey dashed; }
+body, html {
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    line-height: 24px;
+    height: 24px;
+    margin: 10px;
+    padding: 0;
+}
+canvas#game { 
+    border:1px grey dashed; 
+}

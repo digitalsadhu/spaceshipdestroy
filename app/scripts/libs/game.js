@@ -7,38 +7,42 @@ define([],function(){
 
     var stepSpeed = 5;
 
-    var keyboard, player, canvas;
+    var keyboard, player, canvas, world;
 
     function step() {
         clearCanvas();
+        world.draw();
         player.update(keyboard);
         window.setTimeout(step,stepSpeed);
     };
 
-function clearCanvas() {
-    canvas.getContext()
-    .clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-}
+    function clearCanvas() {
+        canvas.getContext()
+        .clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
 
-function init(dependencies) {
+    function init(dependencies) {
 
-    keyboard = dependencies.keyboard;
-    player = dependencies.player;
-    canvas = dependencies.canvas;
+        keyboard = dependencies.keyboard;
+        player = dependencies.player;
+        canvas = dependencies.canvas;
+        world = dependencies.world;
 
-    //var world = createWorld();
-    canvas.init('game');
+        //var world = createWorld();
+        canvas.init('game');
 
-    window.addEventListener('keydown',keyboard.handleKeyDown,true);
-    window.addEventListener('keyup',keyboard.handleKeyUp,true);
+        window.addEventListener('keydown',keyboard.handleKeyDown,true);
+        window.addEventListener('keyup',keyboard.handleKeyUp,true);
 
-    player.init(startPosition, canvas.getContext());
+        world.init(canvas.getWidth(), canvas.getHeight(), canvas.getContext());
 
-    step();
-}
+        player.init(startPosition, canvas.getContext());
 
-return {
-    'init' : init
-}
+        step();
+    }
+
+    return {
+        'init' : init
+    }
 
 });
