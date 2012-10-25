@@ -25,7 +25,9 @@ define([],function(){
 
     function clearCanvas() {
         canvas.getContext()
-        .clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        .fillStyle = '#000000';
+        canvas.getContext()
+        .fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     function init(dependencies) {
