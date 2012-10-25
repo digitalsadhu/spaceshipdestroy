@@ -1,20 +1,27 @@
 define([],function(){
 
+    var requestAnimationFrame =
+    requestAnimationFrame ||
+    webkitRequestAnimationFrame ||
+    mozRequestAnimationFrame ||
+    msRequestAnimationFrame ||
+    oRequestAnimationFrame;
+
     var startPosition = {
         x : 188,
         y : 130
-    }
+    };
 
     var stepSpeed = 5;
 
     var keyboard, player, canvas, world;
 
-    function step() {
+    function loop() {
         clearCanvas();
         world.draw();
         player.update(keyboard);
-        window.setTimeout(step,stepSpeed);
-    };
+        requestAnimationFrame(loop);
+    }
 
     function clearCanvas() {
         canvas.getContext()
@@ -38,11 +45,11 @@ define([],function(){
 
         player.init(startPosition, canvas.getContext());
 
-        step();
+        requestAnimationFrame(loop);
     }
 
     return {
         'init' : init
-    }
+    };
 
 });
