@@ -1,5 +1,8 @@
 define([], function() {
 
+    DEBUG = true;
+
+
     var player = {
         'radius': 10,
         'image': 'images/spacefighter.png',
@@ -30,6 +33,16 @@ define([], function() {
         context.restore();
 
         //context.drawImage(image, x, y, player.height, player.width);
+
+        if(typeof(DEBUG) != "undefined") {
+            context.clearRect(900,560,1100,600);
+            context.fillStyle = 'rgba( 1, 1, 1, 0.125)';
+            context.fillRect(900,560,1100,600);
+            context.fillStyle = 'rgba(1, 1, 1, 1)';
+            context.fillText("Velocity: " + player.velocity,910,575);
+            context.fillText("Acceleration: " + player.acceleration,1000,575);
+            context.fillText("Angle: "+ angle*rotation*180/Math.PI,910,590);
+        }
     }
 
     function getX() {
@@ -86,16 +99,19 @@ define([], function() {
 
     function updateVelocity() {
 
-        player.velocity = player.velocity + player.acceleration - player.deceleration;
+        var direction = (player.velocity && (player.velocity / Math.abs(player.velocity)));
+
+        player.velocity = player.velocity + player.acceleration;
+        player.velocity = player.velocity - player.deceleration * direction;
         
-        if(player.velocity < 0) {
+        if(Math.abs(player.velocity) < player.deceleration){
             player.velocity = 0;
         }
 
+
         if(Math.abs(player.velocity) > player.maxVelocity){
-            player.velocity = player.maxVelocity * (player.velocity / Math.abs(player.velocity));
+            player.velocity = player.maxVelocity * direction;
         }
-        
     }
 
     function setPosition() {

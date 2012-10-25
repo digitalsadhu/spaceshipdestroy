@@ -1,9 +1,9 @@
 define([],function(){
 
     var blocks = {
-        'height' : 30,
-        'width' : 30,
-        'count' : 40
+        'height' : 2,
+        'width' : 2,
+        'count' : 2000
     };
 
     var ctx, width, height, blockList;
@@ -16,13 +16,9 @@ define([],function(){
         draw();
     }
 
-    function drawBlock(x, y){
-
-        context.beginPath();
-        context.rect(x, y, blocks.width, blocks.height);
-        context.closePath();
-        context.stroke();
-        context.fill();
+    function drawBlock(block){
+        context.fillStyle = 'rgba(' + block.r + ',' + block.g + ',' + block.b + ',' + block.alpha + ')';
+        context.fillRect(block.x, block.y, blocks.width * block.scale, blocks.height * block.scale);
     }
 
     function draw(){
@@ -30,16 +26,38 @@ define([],function(){
         for(var i=0; i<blocks.count; i++){
             //init if not already inited
             if(blockList.length !== blocks.count) {
-                blockList[i] = randomPosition();
+                blockList[i] = randomBlock();
             }
-            drawBlock(blockList[i].x, blockList[i].y);
+
+            var alpha = blockList[i].alpha;
+
+            if(blockList[i].alpha > 0 && blockList[i].alpha < 1){
+                blockList[i].alpha = blockList[i].fadeDirection == 'in' ? blockList[i].alpha + 0.0125 : blockList[i].alpha - 0.0125;
+            }
+            else if(Math.floor(Math.random() * 1024) == 1){
+                if(blockList[i].alpha == 0){
+                    blockList[i].alpha = 0.0125;
+                    blockList[i].fadeDirection = 'in';
+                } else {
+                    blockList[i].alpha = 0.9875;
+                    blockList[i].fadeDirection = 'out';
+                }
+                
+            }
+            drawBlock(blockList[i]);
         }
     }
 
-    function randomPosition(){
+    function randomBlock(){
         return {
             x : Math.floor(width * Math.random()),
-            y : Math.floor(height * Math.random())
+            y : Math.floor(height * Math.random()),
+            r : Math.floor(Math.random() * 125) + 130,
+            g : Math.floor(Math.random() * 125) + 130,
+            b : 255,
+            scale: Math.floor(Math.random()*2) + 1,
+            alpha: 0,
+            fadeDirection: 'in'
         }
     }
 
