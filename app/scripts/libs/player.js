@@ -1,4 +1,4 @@
-define([], function() {
+define(['libs/cannon'], function(cannon) {
 
     DEBUG = true;
 
@@ -18,7 +18,8 @@ define([], function() {
         'maxVelocity': 1,
         'engineSound': 'audio/spaceshipengine.wav',
         'boostSound': 'audio/spaceshipboost.wav',
-        'laserSound': 'audio/laser.wav'
+        'laserSound': 'audio/laser.wav',
+        'weapons' : [cannon.add()]
     };
 
     var image, flameImage, flameImageBoost;
@@ -83,6 +84,12 @@ define([], function() {
         if(keyboard.getKey(17) === true) {
             //FIRE ZE LASER!
             laserSound.play();
+            //tell the weapons to add more ammo into 
+            //the mix
+            for(var i in player.weapons){
+                player.weapons[i].fire(positionX, positionY, angle, rotation);
+            }
+
         }
 
         if (keyboard.getKey(37) === true) {
@@ -119,7 +126,10 @@ define([], function() {
             player.acceleration = 0;
         }
         
-        
+        //tell the weapons to update their ammo positions
+        for(var x in player.weapons){
+            player.weapons[x].updateAmmo();
+        }
         updateVelocity();
         setPosition();
         draw();
