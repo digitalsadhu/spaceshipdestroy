@@ -169,7 +169,7 @@ module.exports = function( grunt ) {
       optimize: 'none',
       baseUrl: './scripts',
       wrap: true,
-      name: 'main'
+      name: 'config'
     },
 
     // While Yeoman handles concat/min when using

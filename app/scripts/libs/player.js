@@ -2,10 +2,10 @@ define([], function() {
 
     var player = {
         'radius': 10,
-        'image': 'images/spaceship1.png',
+        'image': 'images/spacefighter.png',
         'initialRotation': 0,
-        'height': 32,
-        'width': 32,
+        'height': 64,
+        'width': 64,
         'moveSpeed': 1,
         'swivelIncrements': 120
     };
