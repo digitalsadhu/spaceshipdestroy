@@ -6,13 +6,16 @@ define([], function() {
         'initialRotation': 0,
         'height': 64,
         'width': 64,
-        'moveSpeed': 1,
-        'swivelIncrements': 120
+        'swivelIncrements': 120,
+        'velocity' : 0,
+        'acceleration' : 0,
+        'deceleration' : 0.125,
+        'maxVelocity': 1
     };
 
     var image, context, positionX, positionY, angle, rotation;
 
-    function setPosition() {
+    function draw() {
         //save the context so we can do a transform
         context.save();
         //create the transformation
@@ -53,17 +56,24 @@ define([], function() {
             swivelRight();
         }
         if (keyboard.getKey(38) === true) {
-            moveForward();
-        }
-        if (keyboard.getKey(40) === true) {
-            moveBackward();
-        }
-        if (keyboard.getKey(32) === true) {
-            player.mvSpeed = 8;
+            if (keyboard.getKey(32) === true) {
+                player.acceleration = 4;
+                player.maxVelocity = 12;
+            } else {
+                player.acceleration = 0.25;
+                player.maxVelocity = 6;
+            }
+        } else if (keyboard.getKey(40) === true) {
+            player.maxVelocity = 4;
+            player.acceleration = -0.25;
         } else {
-            player.mvSpeed = 1.5;
+            player.acceleration = 0;
         }
+        
+        
+        updateVelocity();
         setPosition();
+        draw();
     }
 
     function swivelLeft() {
@@ -74,17 +84,26 @@ define([], function() {
         rotation = ++rotation % player.swivelIncrements;
     }
 
-    function moveForward() {
-        positionX += Math.sin(angle * rotation) * player.mvSpeed;
-        positionY -= Math.cos(angle * rotation) * player.mvSpeed;
+    function updateVelocity() {
+
+        player.velocity = player.velocity + player.acceleration - player.deceleration;
+        
+        if(player.velocity < 0) {
+            player.velocity = 0;
+        }
+
+        if(Math.abs(player.velocity) > player.maxVelocity){
+            player.velocity = player.maxVelocity * (player.velocity / Math.abs(player.velocity));
+        }
+        
+    }
+
+    function setPosition() {
+        positionX += Math.sin(angle * rotation) * player.velocity;
+        positionY -= Math.cos(angle * rotation) * player.velocity;
         handleEdge();
     }
 
-    function moveBackward() {
-        positionX -= Math.sin(angle * rotation) * 0.5;
-        positionY += Math.cos(angle * rotation) * 0.5;
-        handleEdge();
-    }
 
     function handleEdge()
     {
