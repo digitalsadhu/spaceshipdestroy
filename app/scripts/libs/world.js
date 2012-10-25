@@ -3,7 +3,7 @@ define([],function(){
     var blocks = {
         'height' : 2,
         'width' : 2,
-        'count' : 2000
+        'count' : 1000
     };
 
     var ctx, width, height, blockList;
@@ -17,8 +17,13 @@ define([],function(){
     }
 
     function drawBlock(block){
-        context.fillStyle = 'rgba(' + block.r + ',' + block.g + ',' + block.b + ',' + block.alpha + ')';
-        context.fillRect(block.x, block.y, blocks.width * block.scale, blocks.height * block.scale);
+        if(block.alpha > 0){
+            context.fillStyle = 'rgba(' + block.r + ',' + block.g + ',' + block.b + ',' + block.alpha + ')';
+            context.fillRect(block.x, block.y, blocks.width * block.scale, blocks.height * block.scale);
+        } else {
+            context.fillStyle = '#000000';
+            context.fillRect(block.x, block.y, blocks.width * blocks.scale, blocks.height * blocks.scale);
+        }
     }
 
     function draw(){
@@ -34,7 +39,7 @@ define([],function(){
             if(blockList[i].alpha > 0 && blockList[i].alpha < 1){
                 blockList[i].alpha = blockList[i].fadeDirection == 'in' ? blockList[i].alpha + 0.0125 : blockList[i].alpha - 0.0125;
             }
-            else if(Math.floor(Math.random() * 1024) == 1){
+            else if(Math.floor(Math.random() * 1024 * 4) == 1){
                 if(blockList[i].alpha == 0){
                     blockList[i].alpha = 0.0125;
                     blockList[i].fadeDirection = 'in';

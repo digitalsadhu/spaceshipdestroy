@@ -6,6 +6,8 @@ define([], function() {
     var player = {
         'radius': 10,
         'image': 'images/spacefighter.png',
+        'flameImage': 'images/flame.png',
+        'flameImageBoost': 'images/flame_big.png',
         'initialRotation': 0,
         'height': 64,
         'width': 64,
@@ -13,10 +15,15 @@ define([], function() {
         'velocity' : 0,
         'acceleration' : 0,
         'deceleration' : 0.125,
-        'maxVelocity': 1
+        'maxVelocity': 1,
+        'engineSound': 'audio/spaceshipengine.wav',
+        'boostSound': 'audio/spaceshipboost.wav',
+        'laserSound': 'audio/laser.wav'
     };
 
-    var image, context, positionX, positionY, angle, rotation;
+    var image, flameImage, flameImageBoost;
+    var context, positionX, positionY, angle, rotation;
+    var engineSound, boostSound, laserSound;
 
     function draw() {
         //save the context so we can do a transform
@@ -27,6 +34,16 @@ define([], function() {
         context.rotate(angle * rotation);
         //setPosition(-16, -16);
         context.drawImage(image, -(player.width / 2), -(player.width / 2));
+
+        if(player.acceleration > 0 && player.acceleration < 4){
+            context.drawImage(flameImage, -16, 19);
+            context.drawImage(flameImage, 8, 19);
+        } else if(player.acceleration >= 4){
+            context.drawImage(flameImageBoost, -16, 19);
+            context.drawImage(flameImageBoost, 8, 19);
+        }
+        
+        
 
         //restore the context now that we have performed the
         //transformations
@@ -62,6 +79,12 @@ define([], function() {
     }
 
     function update(keyboard) {
+        
+        if(keyboard.getKey(17) === true) {
+            //FIRE ZE LASER!
+            laserSound.play();
+        }
+
         if (keyboard.getKey(37) === true) {
             swivelLeft();
         }
@@ -70,16 +93,29 @@ define([], function() {
         }
         if (keyboard.getKey(38) === true) {
             if (keyboard.getKey(32) === true) {
+                engineSound.pause();
+                if(boostSound.paused) {
+                    boostSound.play();
+                }
+
                 player.acceleration = 4;
                 player.maxVelocity = 12;
             } else {
+                boostSound.pause();
+                if(engineSound.paused) {
+                    engineSound.play();
+                }
                 player.acceleration = 0.25;
                 player.maxVelocity = 6;
             }
         } else if (keyboard.getKey(40) === true) {
+            boostSound.pause();
+            engineSound.pause();
             player.maxVelocity = 4;
-            player.acceleration = -0.25;
+            player.acceleration = -0.13;
         } else {
+            boostSound.pause();
+            engineSound.pause();
             player.acceleration = 0;
         }
         
@@ -135,6 +171,7 @@ define([], function() {
         }
     }
 
+
     function init(startPosition, ctx) {
         context = ctx;
         rotation = 0;
@@ -148,6 +185,14 @@ define([], function() {
             positionX = startPosition.x;
             positionY = startPosition.y;
         };
+        flameImage = new Image();
+        flameImage.src = player.flameImage;
+        flameImageBoost = new Image();
+        flameImageBoost.src = player.flameImageBoost;
+
+        engineSound = new Audio(player.engineSound);
+        boostSound = new Audio(player.boostSound);
+        laserSound = new Audio(player.laserSound);
     }
 
     return {
